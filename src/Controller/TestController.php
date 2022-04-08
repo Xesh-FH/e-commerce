@@ -2,17 +2,27 @@
 
 namespace App\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
+use App\Taxes\Calculator;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class TestController
 {
+
+    protected Calculator $calculator;
+
+    public function __construct(Calculator $calculator)
+    {
+        $this->calculator = $calculator;
+    }
+
     /**
      * @Route("/", name="index")
      */
     public function index()
     {
+        $tva = $this->calculator->calcul(200);
+        dump($tva);
         dd("ça fonctionne");
     }
 
