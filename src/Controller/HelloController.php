@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Taxes\Calculator;
+use Cocur\Slugify\Slugify;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,10 +22,11 @@ class HelloController extends AbstractController
     }
 
     /**
-     * @Route("/hello/{prenom?World}", name="hello", methods={"GET","POST"}, host="localhost", schemes={"http","https"})
+     * @Route("/hello/{prenom}", name="hello", methods={"GET","POST"}, host="localhost", schemes={"http","https"})
      */
-    public function helloWorld(string $prenom)
+    public function helloWorld(string $prenom = "World", Slugify $slugify)
     {
+        dump($slugify->slugify("Hello World"));
         $this->logger->info("Message de log pour tester le loggerInterface");
         $tva = $this->calculator->calcul(100);
         dump($tva);
