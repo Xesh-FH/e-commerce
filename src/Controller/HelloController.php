@@ -30,6 +30,16 @@ class HelloController extends AbstractController
             'hello.html.twig',
             [
                 "prenom" => $prenom,
+                "formateurs" => [
+                    [
+                        "prenom" => "Lior",
+                        "nom" => "Chamla"
+                    ],
+                    [
+                        "prenom" => "Jérôme",
+                        "nom" => "Durand"
+                    ]
+                ]
             ]
         );
         return new Response($html);
