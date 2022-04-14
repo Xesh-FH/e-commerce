@@ -14,34 +14,42 @@ class HelloController extends AbstractController
 
     protected LoggerInterface $logger;
     protected $calculator;
+    protected $twig;
 
-    public function __construct(LoggerInterface $logger, Calculator $calculator)
+    public function __construct(LoggerInterface $logger, Calculator $calculator, Environment $twig)
     {
         $this->logger = $logger;
         $this->calculator = $calculator;
+        $this->twig = $twig;
     }
 
     /**
-     * @Route("/hello/{prenom}", name="hello", methods={"GET","POST"}, host="localhost", schemes={"http","https"})
+     * @var string $path
+     * @var array $args
      */
-    public function helloWorld(string $prenom = "World", Environment $twig)
+    protected function renders(string $path, array $args = [])
     {
-        $html = $twig->render(
-            'hello.html.twig',
-            [
-                "prenom" => $prenom,
-                "formateurs" => [
-                    [
-                        "prenom" => "Lior",
-                        "nom" => "Chamla"
-                    ],
-                    [
-                        "prenom" => "Jérôme",
-                        "nom" => "Durand"
-                    ]
-                ]
-            ]
-        );
+        $html = $this->twig->render($path, $args);
         return new Response($html);
+    }
+
+
+    /**
+     * @Route("/hello/{prenom}", name="hello", methods={"GET","POST"}, host="localhost", schemes={"http","https"})
+     * @var string $prenom
+     * @return Response
+     */
+    public function helloWorld(string $prenom = "World"): Response
+    {
+        return $this->renders('hello.html.twig', ["prenom" => $prenom]);
+    }
+
+    /**
+     * @Route("/example", name="example")
+     * @return Response 
+     */
+    public function example(): Response
+    {
+        return $this->renders('example.html.twig', ["age" => 39]);
     }
 }

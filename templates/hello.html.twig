@@ -10,10 +10,4 @@
 		Hello
 		{{ prenom }}
 	</h1>
-
-	<h2>Nos Formateurs</h2>
-	{% for formateur in formateurs %}
-		{% include "_formateur.html.twig"  with {"formateur": formateur} %}
-	{% endfor %}
-
 {% endblock %}
