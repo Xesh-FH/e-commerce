@@ -24,24 +24,13 @@ class HelloController extends AbstractController
     }
 
     /**
-     * @var string $path
-     * @var array $args
-     */
-    protected function renders(string $path, array $args = [])
-    {
-        $html = $this->twig->render($path, $args);
-        return new Response($html);
-    }
-
-
-    /**
      * @Route("/hello/{prenom}", name="hello", methods={"GET","POST"}, host="localhost", schemes={"http","https"})
      * @var string $prenom
      * @return Response
      */
     public function helloWorld(string $prenom = "World"): Response
     {
-        return $this->renders('hello.html.twig', ["prenom" => $prenom]);
+        return $this->render('hello.html.twig', ["prenom" => $prenom]);
     }
 
     /**
@@ -50,6 +39,6 @@ class HelloController extends AbstractController
      */
     public function example(): Response
     {
-        return $this->renders('example.html.twig', ["age" => 39]);
+        return $this->render('example.html.twig', ["age" => 39]);
     }
 }
