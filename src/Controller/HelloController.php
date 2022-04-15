@@ -13,8 +13,8 @@ class HelloController extends AbstractController
 {
 
     protected LoggerInterface $logger;
-    protected $calculator;
-    protected $twig;
+    protected Calculator $calculator;
+    protected Environment $twig;
 
     public function __construct(LoggerInterface $logger, Calculator $calculator, Environment $twig)
     {
@@ -25,7 +25,7 @@ class HelloController extends AbstractController
 
     /**
      * @Route("/hello/{prenom}", name="hello", methods={"GET","POST"}, host="localhost", schemes={"http","https"})
-     * @var string $prenom
+     * @param string $prenom
      * @return Response
      */
     public function helloWorld(string $prenom = "World"): Response
@@ -35,7 +35,7 @@ class HelloController extends AbstractController
 
     /**
      * @Route("/example", name="example")
-     * @return Response 
+     * @return Response
      */
     public function example(): Response
     {
