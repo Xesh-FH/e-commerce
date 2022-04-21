@@ -17,7 +17,7 @@ class TestController
     }
 
     /**
-     * @Route("/", name="index")
+     * @Route("/test", name="index")
      */
     public function index()
     {
