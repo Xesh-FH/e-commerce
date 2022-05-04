@@ -4,22 +4,33 @@ namespace App\DataFixtures;
 
 use Faker\Factory;
 use App\Entity\Product;
+use Bezhanov\Faker\Provider\Commerce;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Liior\Faker\Prices;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class AppFixtures extends Fixture
 {
+    protected $slugger;
+
+    public function __construct(SluggerInterface $slugger)
+    {
+        $this->slugger = $slugger;
+    }
+
     public function load(ObjectManager $manager): void
     {
         $faker = Factory::create('fr-FR');
-
+        $faker->addProvider(new Prices($faker));
+        $faker->addProvider(new Commerce($faker));
 
         for ($p = 0; $p < 100; $p++) {
             $product = new Product;
             $product
-                ->setName($faker->sentence())
-                ->setPrice(mt_rand(100, 5000))
-                ->setSlug($faker->slug());
+                ->setName($faker->productName)
+                ->setPrice($faker->price(4000, 20000))
+                ->setSlug(strtolower($this->slugger->slug($product->getName())));
             $manager->persist($product);
         }
         $manager->flush();
