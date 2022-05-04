@@ -5,6 +5,7 @@
         "php": ">=7.4",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "bluemmb/faker-picsum-photos-provider": "^2.0",
         "cocur/slugify": "^4.1",
         "doctrine/doctrine-bundle": "^2.3",
         "doctrine/doctrine-fixtures-bundle": "^3.4",
