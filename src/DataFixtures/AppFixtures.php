@@ -6,6 +6,7 @@ use App\Entity\Category;
 use Faker\Factory;
 use App\Entity\Product;
 use Bezhanov\Faker\Provider\Commerce;
+use Bluemmb\Faker\PicsumPhotosProvider;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Liior\Faker\Prices;
@@ -25,6 +26,7 @@ class AppFixtures extends Fixture
         $faker = Factory::create('fr-FR');
         $faker->addProvider(new Prices($faker));
         $faker->addProvider(new Commerce($faker));
+        $faker->addProvider(new PicsumPhotosProvider($faker));
 
         for ($c = 0; $c < 3; $c++) {
             $category = new Category;
@@ -40,7 +42,9 @@ class AppFixtures extends Fixture
                     ->setName($faker->productName)
                     ->setPrice($faker->price(4000, 20000))
                     ->setSlug(strtolower($this->slugger->slug($product->getName())))
-                    ->setCategory($category);
+                    ->setCategory($category)
+                    ->setShortDescription($faker->paragraph())
+                    ->setMainPicture($faker->imageUrl(400, 400, true));
                 $manager->persist($product);
             }
             $manager->flush();
