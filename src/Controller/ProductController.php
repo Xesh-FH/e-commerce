@@ -5,10 +5,13 @@ namespace App\Controller;
 use App\Repository\CategoryRepository;
 use App\Repository\ProductRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType as TypeTextType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ProductController extends AbstractController
 {
@@ -58,10 +61,42 @@ class ProductController extends AbstractController
         $builder = $factory->createBuilder();
 
         $builder
-            ->add('name')
-            ->add('shortDescription')
-            ->add('price')
-            ->add('category');
+            ->add('name', TypeTextType::class, [
+                'label' => 'Nom du produit',
+                'attr' => [
+                    'class' => 'form-control',
+                    'placeholder' => 'Saisissez le nom du produit à créer',
+                ]
+            ])
+            ->add('shortDescription', TextareaType::class, [
+                'label' => 'Description courte',
+                'attr' => [
+                    'class' => 'form-control',
+                    'placeholder' => 'Décrivez succintement votre produit de manière assez claire pour le visiteur',
+                ]
+            ])
+            ->add('price', MoneyType::class, [
+                'currency' => false,
+                'label' => 'Prix de vente du produit',
+                'attr' => [
+                    'class' => 'form-control',
+                    'placeholder' => 'Indiquez le prix de vente TTC du produit en Euros',
+                ]
+            ])
+            ->add('category', ChoiceType::class, [
+                'label' => 'Catégorie',
+                'attr' => [
+                    'class' => 'form-control',
+                ],
+                'placeholder' => '-- Dans quelle catégorie entre votre produit ? --',
+                'choices' => [
+                    'Catégorie 1' => 1,
+                    'Catégorie 2' => 2,
+                    'Catégorie 3' => 3,
+                    'Catégorie 4' => 4,
+                    'Catégorie 5' => 5,
+                ]
+            ]);
 
         $form = $builder->getForm();
 
