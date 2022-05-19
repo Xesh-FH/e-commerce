@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Category;
 use App\Repository\CategoryRepository;
 use App\Repository\ProductRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
@@ -56,7 +58,7 @@ class ProductController extends AbstractController
     /**
      * @Route("/admin/product/create", name="product-create")
      */
-    public function create(FormFactoryInterface $factory, CategoryRepository $categoryRepository)
+    public function create(FormFactoryInterface $factory)
     {
         $builder = $factory->createBuilder();
 
@@ -82,21 +84,18 @@ class ProductController extends AbstractController
                     'class' => 'form-control',
                     'placeholder' => 'Indiquez le prix de vente TTC du produit en Euros',
                 ]
-            ]);
+            ])
 
-        $options = [];
-        foreach ($categoryRepository->findAll() as $category) {
-            $options[$category->getName()] = $category->getId();
-        }
-
-        $builder
-            ->add('category', ChoiceType::class, [
+            ->add('category', EntityType::class, [
                 'label' => 'Catégorie',
                 'attr' => [
                     'class' => 'form-control',
                 ],
                 'placeholder' => '-- Dans quelle catégorie entre votre produit ? --',
-                'choices' => $options
+                'class' => Category::class,
+                'choice_label' => function (Category $category) {
+                    return strtoupper($category->getName());
+                },
             ]);
 
         $form = $builder->getForm();
