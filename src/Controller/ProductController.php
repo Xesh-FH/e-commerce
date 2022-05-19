@@ -56,7 +56,7 @@ class ProductController extends AbstractController
     /**
      * @Route("/admin/product/create", name="product-create")
      */
-    public function create(FormFactoryInterface $factory)
+    public function create(FormFactoryInterface $factory, CategoryRepository $categoryRepository)
     {
         $builder = $factory->createBuilder();
 
@@ -82,20 +82,21 @@ class ProductController extends AbstractController
                     'class' => 'form-control',
                     'placeholder' => 'Indiquez le prix de vente TTC du produit en Euros',
                 ]
-            ])
+            ]);
+
+        $options = [];
+        foreach ($categoryRepository->findAll() as $category) {
+            $options[$category->getName()] = $category->getId();
+        }
+
+        $builder
             ->add('category', ChoiceType::class, [
                 'label' => 'Catégorie',
                 'attr' => [
                     'class' => 'form-control',
                 ],
                 'placeholder' => '-- Dans quelle catégorie entre votre produit ? --',
-                'choices' => [
-                    'Catégorie 1' => 1,
-                    'Catégorie 2' => 2,
-                    'Catégorie 3' => 3,
-                    'Catégorie 4' => 4,
-                    'Catégorie 5' => 5,
-                ]
+                'choices' => $options
             ]);
 
         $form = $builder->getForm();
