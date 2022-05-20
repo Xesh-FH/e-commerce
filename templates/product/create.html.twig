@@ -1,7 +1,5 @@
 {% extends "base.html.twig" %}
 
-{% form_theme formView _self %}
-
 {% block title %}
 	Création d'un produit
 {% endblock %}
@@ -21,20 +19,8 @@
 	</div>
 	<button type="submit" class="btn btn-primary">
 		<i class="fas fa-save"></i>
-		Créer le
+		Créer le produit
 	</button>
 	{{ form_end(formView) }}
 
-{% endblock %}
-
-
-{# ce bloc est appelé à chaque fois qu'on utilise la fonction form_row() #}
-{% block form_row %}
-	{# La variable form passée à chaque fonction ci-dessous représente chacun des attributs du formulaire de base (formView.name, formView.price, etc...) #}
-	<div class="form-group">
-		{{ form_label(form) }}
-		{{ form_widget(form, {'attr': {'class': 'form-control'}}) }}
-		{{ form_help(form) }}
-		{{ form_errors(form) }}
-	</div>
 {% endblock %}

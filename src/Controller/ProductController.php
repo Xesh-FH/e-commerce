@@ -76,7 +76,7 @@ class ProductController extends AbstractController
                 ]
             ])
             ->add('price', MoneyType::class, [
-                'currency' => false,
+                'currency' => true,
                 'label' => 'Prix de vente du produit',
                 'attr' => [
                     'placeholder' => 'Indiquez le prix de vente TTC du produit en Euros',
