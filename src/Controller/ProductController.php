@@ -66,14 +66,12 @@ class ProductController extends AbstractController
             ->add('name', TypeTextType::class, [
                 'label' => 'Nom du produit',
                 'attr' => [
-                    'class' => 'form-control',
                     'placeholder' => 'Saisissez le nom du produit à créer',
                 ]
             ])
             ->add('shortDescription', TextareaType::class, [
                 'label' => 'Description courte',
                 'attr' => [
-                    'class' => 'form-control',
                     'placeholder' => 'Décrivez succintement votre produit de manière assez claire pour le visiteur',
                 ]
             ])
@@ -81,16 +79,12 @@ class ProductController extends AbstractController
                 'currency' => false,
                 'label' => 'Prix de vente du produit',
                 'attr' => [
-                    'class' => 'form-control',
                     'placeholder' => 'Indiquez le prix de vente TTC du produit en Euros',
                 ]
             ])
 
             ->add('category', EntityType::class, [
                 'label' => 'Catégorie',
-                'attr' => [
-                    'class' => 'form-control',
-                ],
                 'placeholder' => '-- Dans quelle catégorie entre votre produit ? --',
                 'class' => Category::class,
                 'choice_label' => function (Category $category) {

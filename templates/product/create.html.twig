@@ -6,27 +6,28 @@
 
 {% block body %}
 	<h1>Nouveau produit</h1>
-	{# {{ form(formView) }}#}
-	{{ form_start(formView) }}
-	{{ form_errors(formView) }}
 
-	{# {{ form_widget(formView) }} #}
-	{# {{ form_row(formView.name) }} #}
-	{{ form_label(formView.name)}}<p>On peut intercaler
-	</p>
-	{{ form_errors(formView.name)}}<p>Des trucs comme on veut
-	</p>
-	{{ form_widget(formView.name)}}<p>avec les fonctions détaillées pour les formulaires en twig
-	</p>
-	{{ form_help(formView.name)}}
+	<div class="row">
+		<div
+			class="col">
+			{# {{form_row(formView.name)}} #}
 
-	{{ form_row(formView.shortDescription) }}
-	{{ form_row(formView.price) }}
-	{{ form_row(formView.category) }}
+			<div class="form-group">
+				{{ form_label(formView.name) }}
+				{{ form_widget(formView.name, {'attr': {'class': 'form-control'}}) }}
+				{{ form_errors(formView.name) }}
+			</div>
 
-
-		<button type="submit" class="btn btn-primary"> <i class="fas fa-save"></i>
-		Créer le produit
+			{{form_row(formView.price)}}
+		</div>
+		<div class="col">
+			{{form_row(formView.category)}}
+			{{form_row(formView.shortDescription)}}
+		</div>
+	</div>
+	<button type="submit" class="btn btn-primary">
+		<i class="fas fa-save"></i>
+		Créer le
 	</button>
 	{{ form_end(formView) }}
 
