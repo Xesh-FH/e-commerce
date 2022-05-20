@@ -9,13 +9,16 @@ use App\Repository\ProductRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType as TypeTextType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class ProductController extends AbstractController
 {
@@ -60,9 +63,11 @@ class ProductController extends AbstractController
     /**
      * @Route("/admin/product/create", name="product-create")
      */
-    public function create(FormFactoryInterface $factory, Request $request)
+    public function create(FormFactoryInterface $factory, Request $request, SluggerInterface $slugger)
     {
-        $builder = $factory->createBuilder();
+        $builder = $factory->createBuilder(FormType::class, null, [
+            'data_class' => Product::class,
+        ]);
 
         $builder
             ->add('name', TypeTextType::class, [
@@ -84,7 +89,12 @@ class ProductController extends AbstractController
                     'placeholder' => 'Indiquez le prix de vente TTC du produit en Euros',
                 ]
             ])
-
+            ->add('mainPicture', UrlType::class, [
+                'label' => 'Image de présentation du produit',
+                'attr' => [
+                    'placeholder' => 'Renseignez l\'URL de l\'image',
+                ]
+            ])
             ->add('category', EntityType::class, [
                 'label' => 'Catégorie',
                 'placeholder' => '-- Dans quelle catégorie entre votre produit ? --',
@@ -98,16 +108,11 @@ class ProductController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
-            $data = $form->getData();
-
-            $product = new Product();
-            $product
-                ->setName($data['name'])
-                ->setShortDescription($data['shortDescription'])
-                ->setPrice($data['price'])
-                ->setCategory($data['category']);
-
-            dd($product);
+            /**
+             * @var Product
+             */
+            $product = $form->getData();
+            $product->setSlug(strtolower($slugger->slug($product->getName())));
         }
 
         $formView = $form->createView();
