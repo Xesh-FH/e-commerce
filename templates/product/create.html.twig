@@ -6,4 +6,28 @@
 
 {% block body %}
 	<h1>Nouveau produit</h1>
-	{{ form(formView) }}{% endblock %}
+	{# {{ form(formView) }}#}
+	{{ form_start(formView) }}
+	{{ form_errors(formView) }}
+
+	{# {{ form_widget(formView) }} #}
+	{# {{ form_row(formView.name) }} #}
+	{{ form_label(formView.name)}}<p>On peut intercaler
+	</p>
+	{{ form_errors(formView.name)}}<p>Des trucs comme on veut
+	</p>
+	{{ form_widget(formView.name)}}<p>avec les fonctions détaillées pour les formulaires en twig
+	</p>
+	{{ form_help(formView.name)}}
+
+	{{ form_row(formView.shortDescription) }}
+	{{ form_row(formView.price) }}
+	{{ form_row(formView.category) }}
+
+
+		<button type="submit" class="btn btn-primary"> <i class="fas fa-save"></i>
+		Créer le produit
+	</button>
+	{{ form_end(formView) }}
+
+{% endblock %}
