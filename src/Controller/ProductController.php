@@ -63,7 +63,7 @@ class ProductController extends AbstractController
         SluggerInterface $slugger,
         EntityManagerInterface $em
     ) {
-        $builder = $factory->createBuilder(ProductType::class);
+        $builder = $factory->createNamedBuilder('nomDeFormulairePersonnalisé', ProductType::class);
         $form = $builder->getForm();
         $form->handleRequest($request);
 
