@@ -8,7 +8,6 @@ use App\Repository\CategoryRepository;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -57,14 +56,9 @@ class ProductController extends AbstractController
     /**
      * @Route("/admin/product/create", name="product-create")
      */
-    public function create(
-        FormFactoryInterface $factory,
-        Request $request,
-        SluggerInterface $slugger,
-        EntityManagerInterface $em
-    ) {
-        $builder = $factory->createNamedBuilder('nomDeFormulairePersonnalisé', ProductType::class);
-        $form = $builder->getForm();
+    public function create(Request $request, SluggerInterface $slugger, EntityManagerInterface $em)
+    {
+        $form = $this->createForm(ProductType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {

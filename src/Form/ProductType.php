@@ -15,7 +15,7 @@ class ProductType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name', TypeTextType::class, [
+            ->add('name', TextType::class, [
                 'label' => 'Nom du produit',
                 'attr' => [
                     'placeholder' => 'Saisissez le nom du produit à créer',
