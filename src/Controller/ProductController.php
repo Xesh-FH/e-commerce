@@ -4,15 +4,16 @@ namespace App\Controller;
 
 use App\Entity\Product;
 use App\Form\ProductType;
-use App\Repository\CategoryRepository;
 use App\Repository\ProductRepository;
+use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ProductController extends AbstractController
 {
@@ -79,14 +80,12 @@ class ProductController extends AbstractController
 
             //Redirect à l'ancienne
 
-            $response = new Response();
             $url = $urlGenerator->generate('product_show', [
                 'category_slug' => $product->getCategory()->getSlug(),
                 'slug' => $product->getSlug(),
             ]);
 
-            $response->headers->set('Location', $url);
-            $response->setStatusCode(302);
+            $response = new RedirectResponse($url);
             return $response;
         }
 
