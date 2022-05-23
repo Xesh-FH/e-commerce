@@ -77,14 +77,10 @@ class ProductController extends AbstractController
             //Pas besoin de $em->persist ici, car on travaille sur un élément déjà en base de données.
             $em->flush($product);
 
-            //Redirect à l'ancienne
-
-            $url = $urlGenerator->generate('product_show', [
+            return $this->redirectToRoute('product_show', [
                 'category_slug' => $product->getCategory()->getSlug(),
                 'slug' => $product->getSlug(),
             ]);
-
-            return $this->redirect($url);
         }
 
         return $this->render('product/edit.html.twig', [
@@ -107,6 +103,11 @@ class ProductController extends AbstractController
             $product->setSlug(strtolower($slugger->slug($product->getName())));
             $em->persist($product);
             $em->flush();
+
+            return $this->redirectToRoute('product_show', [
+                'category_slug' => $product->getCategory()->getSlug(),
+                'slug' => $product->getSlug(),
+            ]);
         }
 
         $formView = $form->createView();
