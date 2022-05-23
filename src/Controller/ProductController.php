@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 class ProductController extends AbstractController
@@ -56,7 +57,7 @@ class ProductController extends AbstractController
     /**
      * @Route("/admin/product/{id}/edit", name="product-edit")
      */
-    public function edit($id, ProductRepository $productRepository, Request $request, EntityManagerInterface $em, SluggerInterface $slugger)
+    public function edit($id, ProductRepository $productRepository, Request $request, EntityManagerInterface $em, SluggerInterface $slugger, UrlGeneratorInterface $urlGenerator)
     {
         $product = $productRepository->find($id);
         $form = $this->createForm(ProductType::class);
@@ -75,6 +76,18 @@ class ProductController extends AbstractController
 
             //Pas besoin de $em->persist ici, car on travaille sur un élément déjà en base de données.
             $em->flush($product);
+
+            //Redirect à l'ancienne
+
+            $response = new Response();
+            $url = $urlGenerator->generate('product_show', [
+                'category_slug' => $product->getCategory()->getSlug(),
+                'slug' => $product->getSlug(),
+            ]);
+
+            $response->headers->set('Location', $url);
+            $response->setStatusCode(302);
+            return $response;
         }
 
         return $this->render('product/edit.html.twig', [
