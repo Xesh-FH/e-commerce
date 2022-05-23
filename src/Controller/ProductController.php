@@ -54,18 +54,46 @@ class ProductController extends AbstractController
 
 
     /**
+     * @Route("/admin/product/{id}/edit", name="product-edit")
+     */
+    public function edit($id, ProductRepository $productRepository, Request $request, EntityManagerInterface $em, SluggerInterface $slugger)
+    {
+        $product = $productRepository->find($id);
+        $form = $this->createForm(ProductType::class);
+
+        // setData équivaut à passer $product en second paramètre de createForm()
+        $form->setData($product);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            //On remet à jour le slug au cas ou le nom du produit aurait été changé
+            if ($product->getSlug() !== (strtolower($slugger->slug($product->getName())))) {
+                $product->setSlug(strtolower($slugger->slug($product->getName())));
+            }
+
+            //Pas besoin de $em->persist ici, car on travaille sur un élément déjà en base de données.
+            $em->flush($product);
+        }
+
+        return $this->render('product/edit.html.twig', [
+            'product' => $product,
+            'formView' => $form->createView(),
+        ]);
+    }
+
+
+    /**
      * @Route("/admin/product/create", name="product-create")
      */
     public function create(Request $request, SluggerInterface $slugger, EntityManagerInterface $em)
     {
-        $form = $this->createForm(ProductType::class);
+        $product = new Product();
+        $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
-            /**
-             * @var Product
-             */
-            $product = $form->getData();
             $product->setSlug(strtolower($slugger->slug($product->getName())));
             $em->persist($product);
             $em->flush();
