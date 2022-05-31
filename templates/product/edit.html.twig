@@ -16,7 +16,9 @@
 		</div>
 		<div class="col">
 			{{form_row(formView.mainPicture)}}
-			{{form_row(formView.category)}}
+			{% if product.id is null %}
+				{{form_row(formView.category)}}
+			{% endif %}
 			{{form_row(formView.shortDescription)}}
 
 		</div>

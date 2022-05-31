@@ -60,10 +60,7 @@ class ProductController extends AbstractController
     public function edit($id, ProductRepository $productRepository, Request $request, EntityManagerInterface $em, SluggerInterface $slugger, UrlGeneratorInterface $urlGenerator)
     {
         $product = $productRepository->find($id);
-        $form = $this->createForm(ProductType::class);
-
-        // setData équivaut à passer $product en second paramètre de createForm()
-        $form->setData($product);
+        $form = $this->createForm(ProductType::class, $product);
 
         $form->handleRequest($request);
 

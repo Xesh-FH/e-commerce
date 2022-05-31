@@ -8,6 +8,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\{MoneyType, TextareaType, TextType as TextType, UrlType};
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ProductType extends AbstractType
@@ -39,15 +41,24 @@ class ProductType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Renseignez l\'URL de l\'image',
                 ]
-            ])
-            ->add('category', EntityType::class, [
-                'label' => 'Catégorie',
-                'placeholder' => '-- Dans quelle catégorie entre votre produit ? --',
-                'class' => Category::class,
-                'choice_label' => function (Category $category) {
-                    return strtoupper($category->getName());
-                },
             ]);
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $form = $event->getForm();
+
+            /** @var Product */
+            $product = $event->getData();
+            if (!$product->getId()) {
+                $form->add('category', EntityType::class, [
+                    'label' => 'Catégorie',
+                    'placeholder' => '-- Dans quelle catégorie entre votre produit ? --',
+                    'class' => Category::class,
+                    'choice_label' => function (Category $category) {
+                        return strtoupper($category->getName());
+                    }
+                ]);
+            }
+        });
     }
 
     public function configureOptions(OptionsResolver $resolver): void
