@@ -7,6 +7,7 @@ use App\Entity\Category;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\{MoneyType, TextareaType, TextType as TextType, UrlType};
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -51,23 +52,22 @@ class ProductType extends AbstractType
                 }
             ]);
 
-        $builder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {
-            /** @var Product */
-            $product = $event->getData();
-            if ($product->getPrice()) {
-                $product->setPrice($product->getPrice() * 100);
+        $builder->get('price')->addModelTransformer(new CallbackTransformer(
+            function ($value) {
+                if ($value) {
+                    return $value / 100;
+                } else {
+                    return;
+                }
+            },
+            function ($value) {
+                if ($value) {
+                    return $value * 100;
+                } else {
+                    return;
+                }
             }
-        });
-
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $form = $event->getForm();
-            /** @var Product */
-            $product = $event->getData();
-
-            if ($product->getPrice()) {
-                $product->setPrice($product->getPrice() / 100);
-            }
-        });
+        ));
     }
 
     public function configureOptions(OptionsResolver $resolver): void
