@@ -20,11 +20,19 @@ class Product
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Le nom du produit est requis")
+     * @Assert\Length(
+     *  min=4,
+     *  max=200,
+     *  minMessage="Le nom doit contenir au moins {{ limit }} caractères",
+     *  maxMessage="Le nom ne doit pas faire plus de {{ limit }} caractères"
+     * )
      */
     private $name;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank(message="Il est nécessaire de renseigner un prix")
      */
     private $price;
 
@@ -47,20 +55,6 @@ class Product
      * @ORM\Column(type="text")
      */
     private $shortDescription;
-
-    public static function loadValidatorMetaData(ClassMetadata $metadata)
-    {
-        $metadata->addPropertyConstraints('name', [
-            new Assert\NotBlank(['message' => "Le produit doit avoir un nom"]),
-            new Assert\Length([
-                'min' => 5,
-                'max' => 255,
-                'minMessage' => "Le nom du produit doit contenir au moins {{ limit }} caractères.",
-                'maxMessage' => "Le nom du produit doit contenir au maximum {{ limit }} caractères."
-            ])
-        ]);
-        $metadata->addPropertyConstraint('price', new Assert\NotBlank(['message' => "Le produit doit avoir un prix"]));
-    }
 
     public function getId(): ?int
     {
