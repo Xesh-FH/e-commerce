@@ -49,6 +49,20 @@ class Product
      */
     private $shortDescription;
 
+    public static function loadValidatorMetaData(ClassMetadata $metadata)
+    {
+        $metadata->addPropertyConstraints('name', [
+            new NotBlank(['message' => "Le produit doit avoir un nom"]),
+            new Length([
+                'min' => 5,
+                'max' => 255,
+                'minMessage' => "Le nom du produit doit contenir au moins {{ limit }} caractères.",
+                'maxMessage' => "Le nom du produit doit contenir au maximum {{ limit }} caractères."
+            ])
+        ]);
+        $metadata->addPropertyConstraint('price', new NotBlank(['message' => "Le produit doit avoir un prix"]));
+    }
+
     public function getId(): ?int
     {
         return $this->id;
