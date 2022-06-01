@@ -41,22 +41,31 @@ class ProductType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Renseignez l\'URL de l\'image',
                 ]
+            ])
+            ->add('category', EntityType::class, [
+                'label' => 'Catégorie',
+                'placeholder' => '-- Dans quelle catégorie entre votre produit ? --',
+                'class' => Category::class,
+                'choice_label' => function (Category $category) {
+                    return strtoupper($category->getName());
+                }
             ]);
+
+        $builder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {
+            /** @var Product */
+            $product = $event->getData();
+            if ($product->getPrice()) {
+                $product->setPrice($product->getPrice() * 100);
+            }
+        });
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $form = $event->getForm();
-
             /** @var Product */
             $product = $event->getData();
-            if (!$product->getId()) {
-                $form->add('category', EntityType::class, [
-                    'label' => 'Catégorie',
-                    'placeholder' => '-- Dans quelle catégorie entre votre produit ? --',
-                    'class' => Category::class,
-                    'choice_label' => function (Category $category) {
-                        return strtoupper($category->getName());
-                    }
-                ]);
+
+            if ($product->getPrice()) {
+                $product->setPrice($product->getPrice() / 100);
             }
         });
     }

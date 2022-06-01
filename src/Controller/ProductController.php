@@ -65,7 +65,6 @@ class ProductController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             //On remet à jour le slug au cas ou le nom du produit aurait été changé
             if ($product->getSlug() !== (strtolower($slugger->slug($product->getName())))) {
                 $product->setSlug(strtolower($slugger->slug($product->getName())));
