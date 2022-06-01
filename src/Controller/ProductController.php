@@ -11,8 +11,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Validator\Constraints\GreaterThan;
+use Symfony\Component\Validator\Constraints\LessThan;
+use Symfony\Component\Validator\Constraints\LessThanOrEqual;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ProductController extends AbstractController
 {
@@ -57,8 +60,25 @@ class ProductController extends AbstractController
     /**
      * @Route("/admin/product/{id}/edit", name="product-edit")
      */
-    public function edit($id, ProductRepository $productRepository, Request $request, EntityManagerInterface $em, SluggerInterface $slugger, UrlGeneratorInterface $urlGenerator)
+    public function edit($id, ProductRepository $productRepository, Request $request, EntityManagerInterface $em, SluggerInterface $slugger, ValidatorInterface $validator)
     {
+        $age = 50;
+        $resultat =  $validator->validate($age, [
+            new LessThanOrEqual([
+                'value' => 130,
+                'message' => "L'age doit être inférieur à {{ compared_value }} mais vous avez saisi {{ value }}",
+            ]),
+            new GreaterThan([
+                'value' => 0,
+                'message' => "L'age doit être plus grand que {{ compared_value }}",
+            ])
+        ]);
+        if ($resultat->count()) {
+            dd("Il y a des erreurs : ", $resultat);
+        } else {
+            dd("Tout va bien");
+        }
+
         $product = $productRepository->find($id);
         $form = $this->createForm(ProductType::class, $product);
 
@@ -84,7 +104,6 @@ class ProductController extends AbstractController
             'formView' => $form->createView(),
         ]);
     }
-
 
     /**
      * @Route("/admin/product/create", name="product-create")
