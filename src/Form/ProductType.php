@@ -4,14 +4,11 @@ namespace App\Form;
 
 use App\Entity\Product;
 use App\Entity\Category;
-use App\Form\DataTransformer\CentimesTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\{MoneyType, TextareaType, TextType as TextType, UrlType};
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
+
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ProductType extends AbstractType
@@ -36,7 +33,8 @@ class ProductType extends AbstractType
                 'label' => 'Prix de vente du produit',
                 'attr' => [
                     'placeholder' => 'Indiquez le prix de vente TTC du produit en Euros',
-                ]
+                ],
+                'divisor' => 100,
             ])
             ->add('mainPicture', UrlType::class, [
                 'label' => 'Image de présentation du produit',
@@ -53,7 +51,7 @@ class ProductType extends AbstractType
                 }
             ]);
 
-        $builder->get('price')->addModelTransformer(new CentimesTransformer);
+        // $builder->get('price')->addModelTransformer(new CentimesTransformer);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
