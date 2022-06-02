@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Mapping\ClassMetadata;
 
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
@@ -28,13 +27,13 @@ class Product
      *  maxMessage="Le nom ne doit pas faire plus de {{ limit }} caractères"
      * )
      */
-    private $name;
+    private ?string $name;
 
     /**
      * @ORM\Column(type="integer")
      * @Assert\NotBlank(message="Il est nécessaire de renseigner un prix")
      */
-    private $price;
+    private ?int $price;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -71,7 +70,7 @@ class Product
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(?string $name): self
     {
         $this->name = $name;
 
@@ -83,7 +82,7 @@ class Product
         return $this->price;
     }
 
-    public function setPrice(int $price): self
+    public function setPrice(?int $price): self
     {
         $this->price = $price;
 

@@ -8,7 +8,6 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\{MoneyType, TextareaType, TextType as TextType, UrlType};
-
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ProductType extends AbstractType
@@ -20,7 +19,7 @@ class ProductType extends AbstractType
                 'label' => 'Nom du produit',
                 'attr' => [
                     'placeholder' => 'Saisissez le nom du produit à créer',
-                ]
+                ],
             ])
             ->add('shortDescription', TextareaType::class, [
                 'label' => 'Description courte',
