@@ -19,19 +19,25 @@ class Product
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank(message="Le nom du produit est requis")
+     * @Assert\NotBlank(message="Le nom du produit est requis", groupes={"large-name"})
      * @Assert\Length(
      *  min=4,
      *  max=200,
      *  minMessage="Le nom doit contenir au moins {{ limit }} caractères",
      *  maxMessage="Le nom ne doit pas faire plus de {{ limit }} caractères"
      * )
+     * @Assert\Length(
+     *  min=10,
+     *  max=200,
+     *  minMessage="Le nom doit contenir au moins {{ limit }} caractères",
+     *  maxMessage="Le nom ne doit pas faire plus de {{ limit }} caractères"
+     *  groupes={"large-name})
      */
     private ?string $name;
 
     /**
      * @ORM\Column(type="integer")
-     * @Assert\NotBlank(message="Il est nécessaire de renseigner un prix")
+     * @Assert\NotBlank(message="Il est nécessaire de renseigner un prix", groups={"with-price"})
      */
     private ?int $price;
 

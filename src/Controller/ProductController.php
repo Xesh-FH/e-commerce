@@ -91,7 +91,9 @@ class ProductController extends AbstractController
     public function create(Request $request, SluggerInterface $slugger, EntityManagerInterface $em)
     {
         $product = new Product();
-        $form = $this->createForm(ProductType::class, $product);
+        $form = $this->createForm(ProductType::class, $product, [
+            'validation_groups' => ["with-price"]
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
