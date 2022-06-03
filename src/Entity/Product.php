@@ -19,25 +19,19 @@ class Product
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank(message="Le nom du produit est requis", groupes={"large-name"})
+     * @Assert\NotBlank(message="Le nom du produit est requis.")
      * @Assert\Length(
      *  min=4,
      *  max=200,
-     *  minMessage="Le nom doit contenir au moins {{ limit }} caractères",
-     *  maxMessage="Le nom ne doit pas faire plus de {{ limit }} caractères"
+     *  minMessage="Le nom doit contenir au moins {{ limit }} caractères.",
+     *  maxMessage="Le nom ne doit pas faire plus de {{ limit }} caractères."
      * )
-     * @Assert\Length(
-     *  min=10,
-     *  max=200,
-     *  minMessage="Le nom doit contenir au moins {{ limit }} caractères",
-     *  maxMessage="Le nom ne doit pas faire plus de {{ limit }} caractères"
-     *  groupes={"large-name})
      */
     private ?string $name;
 
     /**
      * @ORM\Column(type="integer")
-     * @Assert\NotBlank(message="Il est nécessaire de renseigner un prix", groups={"with-price"})
+     * @Assert\NotBlank(message="Il est nécessaire de renseigner un prix.")
      */
     private ?int $price;
 
@@ -53,11 +47,20 @@ class Product
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Url(message="Ce champ doit contenir une URL valide.")
+     * @Assert\NotBlank(message="La photo principale est requise.")
      */
     private $mainPicture;
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\NotBlank(message="Une description courte est requise.")
+     * @Assert\Length(
+     *  min=20,
+     *  max=255,
+     *  minMessage="La description courte doit faire au moins {{ limit }} caractères.",
+     *  maxMessage="La description courte doit faire au plus {{ limit }} caractères."
+     * )
      */
     private $shortDescription;
 
@@ -124,7 +127,7 @@ class Product
         return $this->mainPicture;
     }
 
-    public function setMainPicture(string $mainPicture): self
+    public function setMainPicture(?string $mainPicture): self
     {
         $this->mainPicture = $mainPicture;
 
@@ -136,7 +139,7 @@ class Product
         return $this->shortDescription;
     }
 
-    public function setShortDescription(string $shortDescription): self
+    public function setShortDescription(?string $shortDescription): self
     {
         $this->shortDescription = $shortDescription;
 
