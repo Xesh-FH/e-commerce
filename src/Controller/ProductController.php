@@ -104,9 +104,7 @@ class ProductController extends AbstractController
                 'slug' => $product->getSlug(),
             ]);
         }
-
         $formView = $form->createView();
-
         return $this->render('product/create.html.twig', [
             'formView' => $formView,
         ]);

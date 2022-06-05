@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends "base.html.twig" %}
 
 {% block title %}
 	Créer une catégorie
@@ -8,9 +8,12 @@
 	<h1>Créer une catégorie
 	</h1>
 	{{form_start(formView)}}
-
-	{{form_widget(formView)}}
-
+	{{form_errors($form)}}
+	<div class="row">
+		<div class="col">
+			{{form_row(formView.name)}}
+		</div>
+	</div>
 	<button type="submit" class="btn btn-primary">
 		<i class="fas fa-save"></i>
 		Créer la catégorie

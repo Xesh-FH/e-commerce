@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends "base.html.twig" %}
 
 {% block title %}
 	Modifier une catégorie
@@ -10,8 +10,11 @@
 	</h1>
 	{{form_start(formView)}}
 
-	{{form_widget(formView)}}
-
+	<div class="row">
+		<div class="col">
+			{{form_widget(formView)}}
+		</div>
+	</div>
 	<button type="submit" class="btn btn-primary">
 		<i class="fas fa-save"></i>
 		Enregistrer les Changements

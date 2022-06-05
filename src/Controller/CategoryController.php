@@ -21,8 +21,6 @@ class CategoryController extends AbstractController
     {
         $category = new Category();
         $form = $this->createForm(CategoryType::class, $category);
-        $formView = $form->createView();
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -32,7 +30,7 @@ class CategoryController extends AbstractController
 
             return $this->redirectToRoute('homepage');
         }
-
+        $formView = $form->createView();
         return $this->render('category/create-category.html.twig', [
             'formView' => $formView,
         ]);
@@ -45,8 +43,6 @@ class CategoryController extends AbstractController
     {
         $category = $categoryRepository->find($id);
         $form = $this->createForm(CategoryType::class, $category);
-        $formView = $form->createView();
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -57,6 +53,7 @@ class CategoryController extends AbstractController
             return $this->redirectToRoute('homepage');
         }
 
+        $formView = $form->createView();
         return $this->render('category/edit-category.html.twig', [
             'category' => $category,
             'formView' => $formView,
