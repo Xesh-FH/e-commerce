@@ -54,6 +54,8 @@ class LoginFormAuthenticator extends AbstractGuardAuthenticator
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
         $request->attributes->set(Security::AUTHENTICATION_ERROR, $exception);
+        $login = $request->request->get('login');
+        $request->attributes->set(Security::LAST_USERNAME, $login['email']);
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $providerKey)
