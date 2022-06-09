@@ -14,10 +14,9 @@ class SecurityController extends AbstractController
     /**
      * @Route("/login", name="security_login")
      */
-    public function login(AuthenticationUtils $utils, FormFactoryInterface $factory): Response
+    public function login(AuthenticationUtils $utils): Response
     {
-        // $form = $this->createForm(LoginType::class, ['email' => $utils->getLastUsername()]);
-        $form = $factory->createNamed('', LoginType::class, ['email' => $utils->getLastUsername()]);
+        $form = $this->createForm(LoginType::class, ['email' => $utils->getLastUsername()]);
         return $this->render('security/login.html.twig', [
             'formView' => $form->createView(),
             'error' => $utils->getLastAuthenticationError(),
