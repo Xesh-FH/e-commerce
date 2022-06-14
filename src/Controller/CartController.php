@@ -6,6 +6,7 @@ use App\Repository\ProductRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class CartController extends AbstractController
@@ -14,7 +15,7 @@ class CartController extends AbstractController
      * @Route("/cart/add/{id}", name="cart_add", requirements= {"id":"\d+"})
      * @param int $id l'id du Product à ajouter au Cart
      */
-    public function add(int $id, Request $request, ProductRepository $productRepository): Response
+    public function add(int $id, ProductRepository $productRepository, SessionInterface $session): Response
     {
         // 0. Sécurisation : est-ce que le produit existe ?
         $product = $productRepository->find($id);
@@ -26,7 +27,7 @@ class CartController extends AbstractController
 
         // 1. Retrouver le panier dans la session (sous forme de tableau)
         // 2. S'il n'existe pas, prendre un tableau vide
-        $cart = $request->getSession()->get('cart', []);
+        $cart = $session->get('cart', []);
 
         // 3. voir si le produit $id existe déjà dans le tableau
         // 4. Si c'est le cas, simplement augmenter la quantité
@@ -38,8 +39,7 @@ class CartController extends AbstractController
         }
 
         // 6. Enregistrer le tableau à jour dans la session
-        $request->getSession()->set('cart', $cart);
-
+        $session->set('cart', $cart);
         return $this->redirectToRoute('product_show', [
             'category_slug' => $product->getCategory()->getSlug(),
             'slug' => $product->getSlug(),
