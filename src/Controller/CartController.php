@@ -40,7 +40,10 @@ class CartController extends AbstractController
         // 6. Enregistrer le tableau à jour dans la session
         $session->set('cart', $cart);
 
-        $this->addFlash('success', "Produit ajouté au panier.");
+        $this->addFlash('success', [
+            'title' => "Félicitations",
+            'content' => "Produit ajouté au panier.",
+        ]);
 
         return $this->redirectToRoute('product_show', [
             'category_slug' => $product->getCategory()->getSlug(),
