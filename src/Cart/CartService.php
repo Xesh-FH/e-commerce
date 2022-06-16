@@ -51,6 +51,12 @@ class CartService
         $total = 0;
         foreach ($this->session->get('cart', []) as $id => $qty) {
             $product = $this->productRepository->find($id);
+
+            // Si le produit n'existe pas en base, on ne fait rien sur cette itération de boucle, et on passe à la suite.
+            if (!$product) {
+                continue;
+            }
+
             $total += $product->getPrice() * $qty;
         }
         return $total;
@@ -66,10 +72,13 @@ class CartService
         $detailedCart = [];
         foreach ($this->session->get('cart', []) as $id => $qty) {
             $product = $this->productRepository->find($id);
-            $detailedCart[] = [
-                'product' => $product,
-                'qty' => $qty,
-            ];
+
+            // Si le produit n'existe pas en base, on ne fait rien sur cette itération de boucle, et on passe à la suite.
+            if (!$product) {
+                continue;
+            }
+
+            $detailedCart[] = new CartItem($product, $qty);
         }
         return $detailedCart;
     }
