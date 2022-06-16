@@ -63,6 +63,42 @@ class CartService
     }
 
     /**
+     * This function removes an item from the cart in session.
+     * @param int $id
+     * @return void
+     */
+    public function remove(int $id): void
+    {
+        // On  met le cart de la session dans une variable, s'il n'existe pas, on a un tableau vide.
+        $cart = $this->session->get('cart', []);
+
+        // on supprime du tableau l'entrée qui a la clé '$id'
+        unset($cart[$id]);
+
+        $this->session->set('cart', $cart);
+    }
+
+    /**
+     * This function decrements 1 from the quantity of an item in the cart.
+     */
+    public function decrementItem(int $id): void
+    {
+        $cart = $this->session->get('cart', []);
+        if (!array_key_exists($id, $cart)) {
+            return;
+        }
+        // si le produit n'est qu'en 1 exemplaire dans le panier, on le supprime.
+        if ($cart[$id] === 1) {
+            $this->remove($id);
+        }
+        // dans le cas contraire, on décrémente la valeur de la clé $id qui correspond à la quantité pour cet id.
+        $cart[$id]--;
+
+        // On met à jour le cart de la session.
+        $this->session->set('cart', $cart);
+    }
+
+    /**
      * This function agregates data about the products in cart
      * in order to be able to display detailed infos in views.
      * @return array $detailedCart

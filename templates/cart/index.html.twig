@@ -6,32 +6,49 @@
 {% block body %}
 	<h1>Contenu de votre Panier :</h1>
 
-	<table class="table">
-		<thead>
-			<tr>
-				<th>Produit</th>
-				<th>Prix</th>
-				<th>Quantité</th>
-				<th>Total</th>
-			</tr>
-		</thead>
-		<tbody>
-			{% for item in items %}
-				<tr>
-					<td>{{ item.product.name }}</td>
-					<td>{{ item.product.price }}</td>
-					<td>{{ item.qty }}</td>
-					<td>{{ item.total }}</td>
-				</tr>
-			{% endfor %}
-		</tbody>
-		<tfoot>
-			<tr>
-				<td colspan="3">Total :
-				</td>
-				<td>{{ cartTotal }}</td>
-			</tr>
-		</tfoot>
-	</table>
+	{% if items | length > 0%}
 
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Produit</th>
+					<th>Prix</th>
+					<th>Quantité</th>
+					<th>Total</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for item in items %}
+					<tr>
+						<td>{{ item.product.name }}</td>
+						<td>{{ item.product.price }}</td>
+						<td class="d-flex">
+							<a href="{{ path("cart_decrement_item", {"id": item.product.id}) }}" class="btn btn-sm btn-warning">
+								<i class="fas fa-minus"></i>
+							</a>
+							<p class="m-2">{{ item.qty }}</p>
+							<a href="{{ path("cart_add", {"id": item.product.id}) }}?returnToCart=true" class="btn btn-sm btn-success">
+								<i class="fas fa-plus"></i>
+							</a>
+						</td>
+						<td>{{ item.total }}</td>
+						<td>
+							<a title="Supprimer" href="{{ path('cart_remove_item', {"id": item.product.id}) }}" class="btn btn-sm btn-danger">
+								<i class="fas fa-trash-alt"></i>
+							</a>
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+			<tfoot>
+				<tr>
+					<td colspan="3">Total :</td>
+					<td colspan="2">{{ cartTotal }}</td>
+				</tr>
+			</tfoot>
+		</table>
+	{% else %}
+		<h2>Votre panier est vide</h2>
+	{% endif %}
 {% endblock %}
