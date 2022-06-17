@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Cart\CartService;
 use App\Entity\Product;
 use App\Form\ProductType;
 use App\Repository\ProductRepository;
@@ -12,6 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ProductController extends AbstractController
@@ -38,12 +40,13 @@ class ProductController extends AbstractController
     /**
      * @Route("/{category_slug}/{slug}", name="product_show")
      */
-    public function show(string $slug, ProductRepository $productRepository)
+    public function show(string $slug, ProductRepository $productRepository, SessionInterface $session)
     {
         $product = $productRepository->findOneBy([
             "slug" => $slug,
         ]);
 
+        dump($session->get(CartService::CART_SESSION_KEY));
         if (!$product) {
             throw $this->createNotFoundException("Le produit $slug n'existe pas");
         }
