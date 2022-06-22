@@ -21,6 +21,9 @@
 					</a>
 				</li>
 				{% if app.user %}
+					<li class="nav-item">
+						<a href="#" class="nav-link">Mes commandes</a>
+					</li>
 					<a href="{{ path('security_logout') }}" class="btn btn-danger">Logout</a>
 				{% else %}
 					<a href="{{ path('security_login') }}" class="btn btn-success">Login</a>
