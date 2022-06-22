@@ -85,7 +85,8 @@ class AppFixtures extends Fixture
                     ->setCity($faker->city)
                     //On associe la commande à un utilisateur aléatoirement.
                     ->setUser($faker->randomElement($users))
-                    ->setTotal(mt_rand(2000, 30000));
+                    ->setTotal(mt_rand(2000, 30000))
+                    ->setPurchasedAt($faker->dateTimeBetween('-6 months'));
 
                 // booléen aléatoire avec 90% de chances de true.
                 if ($faker->boolean(90)) {
