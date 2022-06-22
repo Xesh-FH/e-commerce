@@ -18,6 +18,20 @@ class CartService
         $this->productRepository = $productRepository;
     }
 
+    /** This function gets the 'cart' from session  */
+    protected function getCart(): array
+    {
+        return $this->session->get(self::CART_SESSION_KEY);
+    }
+
+    /** This function saves the 'cart' into session  */
+    protected function saveCart(array $cart): void
+    {
+        $this->session->set(self::CART_SESSION_KEY, $cart);
+    }
+
+
+
     /**
      * This function adds a product found by its $id to the 'cart' array in Session.
      * @param int $id Id of the product to add in cart.
@@ -29,19 +43,20 @@ class CartService
 
         // 1. Retrouver le panier dans la session (sous forme de tableau)
         // 2. S'il n'existe pas, prendre un tableau vide
-        $cart = $this->session->get(self::CART_SESSION_KEY, []);
+        $cart = $this->getCart();
 
         // 3. voir si le produit $id existe déjà dans le tableau
         // 4. Si c'est le cas, simplement augmenter la quantité
         // 5. Sinon ajouter le produit $id avec la quantité 1
-        if (array_key_exists($id, $cart)) {
-            $cart[$id]++;
-        } else {
-            $cart[$id] = 1;
+        if (!array_key_exists($id, $cart)) {
+            $cart[$id] = 0;
         }
 
+        $cart[$id]++;
+
+
         // 6. Enregistrer le tableau à jour dans la session
-        $this->session->set(self::CART_SESSION_KEY, $cart);
+        $this->saveCart($cart);
     }
 
     /**
@@ -51,7 +66,7 @@ class CartService
     public function getCartTotal(): int
     {
         $total = 0;
-        foreach ($this->session->get(self::CART_SESSION_KEY, []) as $id => $qty) {
+        foreach ($this->getCart() as $id => $qty) {
             $product = $this->productRepository->find($id);
 
             // Si le produit n'existe pas en base, on ne fait rien sur cette itération de boucle, et on passe à la suite.
@@ -72,11 +87,11 @@ class CartService
     public function remove(int $id): void
     {
         // On  met le cart de la session dans une variable, s'il n'existe pas, on a un tableau vide.
-        $cart = $this->session->get(self::CART_SESSION_KEY, []);
+        $cart = $this->getCart();
         // on supprime du tableau l'entrée qui a la clé '$id'
         unset($cart[$id]);
 
-        $this->session->set(self::CART_SESSION_KEY, $cart);
+        $this->saveCart($cart);
     }
 
     /**
@@ -84,7 +99,7 @@ class CartService
      */
     public function decrementItem(int $id): void
     {
-        $cart = $this->session->get(self::CART_SESSION_KEY, []);
+        $cart = $this->getCart();
         if (!array_key_exists($id, $cart)) {
             return;
         }
@@ -96,7 +111,7 @@ class CartService
         // dans le cas contraire, on décrémente la valeur de la clé $id qui correspond à la quantité pour cet id.
         $cart[$id]--;
         // On met à jour le cart de la session.
-        $this->session->set(self::CART_SESSION_KEY, $cart);
+        $this->saveCart($cart);
     }
 
     /**
@@ -107,7 +122,7 @@ class CartService
     public function getDetailedCartItems(): array
     {
         $detailedCart = [];
-        foreach ($this->session->get(self::CART_SESSION_KEY, []) as $id => $qty) {
+        foreach ($this->getCart() as $id => $qty) {
             $product = $this->productRepository->find($id);
 
             // Si le produit n'existe pas en base, on ne fait rien sur cette itération de boucle, et on passe à la suite.
