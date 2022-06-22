@@ -21,7 +21,7 @@ class CartService
     /** This function gets the 'cart' from session  */
     protected function getCart(): array
     {
-        return $this->session->get(self::CART_SESSION_KEY);
+        return $this->session->get(self::CART_SESSION_KEY, []);
     }
 
     /** This function saves the 'cart' into session  */
