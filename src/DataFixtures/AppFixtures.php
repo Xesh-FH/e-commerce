@@ -6,6 +6,7 @@ use App\Entity\Category;
 use Faker\Factory;
 use App\Entity\Product;
 use App\Entity\Purchase;
+use App\Entity\PurchaseItem;
 use App\Entity\User;
 use Bezhanov\Faker\Provider\Commerce;
 use Bluemmb\Faker\PicsumPhotosProvider;
@@ -55,6 +56,8 @@ class AppFixtures extends Fixture
             $manager->persist($user);
         }
 
+        $products = [];
+
         for ($c = 0; $c < 3; $c++) {
             $category = new Category;
             $category
@@ -72,6 +75,8 @@ class AppFixtures extends Fixture
                     ->setCategory($category)
                     ->setShortDescription($faker->paragraph())
                     ->setMainPicture($faker->imageUrl(400, 400, true));
+
+                $products[] = $product;
                 $manager->persist($product);
             }
 
@@ -87,6 +92,22 @@ class AppFixtures extends Fixture
                     ->setUser($faker->randomElement($users))
                     ->setTotal(mt_rand(2000, 30000))
                     ->setPurchasedAt($faker->dateTimeBetween('-6 months'));
+
+                $selectedProducts = $faker->randomElements($products, mt_rand(2, 6));
+
+                foreach ($selectedProducts as $product) {
+                    $purchaseItem = new PurchaseItem;
+                    $purchaseItem
+                        ->setProduct($product)
+                        ->setQuantity(mt_rand(1, 3))
+                        ->setProductName($product->getName())
+                        ->setProductPrice($product->getPrice())
+                        ->setTotal(
+                            $purchaseItem->getProductPrice() * $purchaseItem->getQuantity()
+                        )
+                        ->setPurchase($purchase);
+                    $manager->persist($purchaseItem);
+                }
 
                 // booléen aléatoire avec 90% de chances de true.
                 if ($faker->boolean(90)) {
