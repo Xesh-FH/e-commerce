@@ -117,7 +117,7 @@ class CartService
     /**
      * This function agregates data about the products in cart
      * in order to be able to display detailed infos in views.
-     * @return array $detailedCart
+     * @return array<CartItem> $detailedCart
      */
     public function getDetailedCartItems(): array
     {
