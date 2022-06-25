@@ -9,69 +9,56 @@ use App\Entity\PurchaseItem;
 use App\Form\CartConfirmationType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class PurchaseConfirmationController
+
+class PurchaseConfirmationController extends AbstractController
 {
-
-    protected FormFactoryInterface $formfactory;
-    protected RouterInterface $router;
-    protected Security $security;
     protected CartService $cartService;
     protected EntityManagerInterface $em;
 
-    public function __construct(FormFactoryInterface $formfactory, RouterInterface $router, Security $security, CartService $cartService, EntityManagerInterface $em)
+    public function __construct(CartService $cartService, EntityManagerInterface $em)
     {
-        $this->formfactory = $formfactory;
-        $this->router = $router;
-        $this->security = $security;
         $this->cartService = $cartService;
         $this->em = $em;
     }
 
     /**
      * @Route("/purchase/confirm", name="purchase_confirm")
+     * @IsGranted("ROLE_USER", message="Vous devez ête connecté pour confirmer une commande.")
      */
-    public function confirm(Request $request, FlashBagInterface $flashBag)
+    public function confirm(Request $request)
     {
         // 1. Lire les données du formulaire
-        $form = $this->formfactory->create(CartConfirmationType::class);
+        $form = $this->createForm(CartConfirmationType::class);
         $form->handleRequest($request);
 
         // 2. Si le formulaire n'a pas été soumis : on dégage d'ici !
         if (!$form->isSubmitted()) {
-            $flashBag->add('warning', [
+            $this->addFlash('warning', [
                 'title' => "Commande invalide :",
                 'content' => "Le formulaire de confirmation doit être rempli pour valider une commande."
             ]);
-            return new RedirectResponse($this->router->generate('cart_show'));
+            return $this->redirectToRoute('cart_show');
         }
 
         // 3. Si je ne suis pas connecté : on dégage d'ici !
-        $user = $this->security->getUser();
-
-        if (!$user) {
-            throw new AccessDeniedException('Vous devez vous identifier pour passer commande.');
-        }
+        $user = $this->getUser();
 
         // 4. Si le panier est vide : on dégage aussi !
         $cartItems = $this->cartService->getDetailedCartItems();
 
         if (count($cartItems) <= 0) {
-            $flashBag->add(
+            $this->addFlash(
                 'warning',
                 [
                     'title' => "Panier vide.",
                     'content' => "Vous ne pouvez pas valider une commande d'un panier vide."
                 ]
             );
-            return new RedirectResponse($this->router->generate('cart_show'));
+            return $this->redirectToRoute('cart_show');
         }
 
         // 5. Création d'une Purchase
@@ -102,10 +89,10 @@ class PurchaseConfirmationController
         // 8. On enregistre la commande
         $this->em->flush();
 
-        $flashBag->add('success', [
+        $this->addFlash('success', [
             'title' => 'Commande enregistrée !',
             'content' => 'Bravo ! Votre commande a bien été prise en compte.'
         ]);
-        return new RedirectResponse($this->router->generate('purchase_index'));
+        return $this->redirectToRoute('purchase_index');
     }
 }
