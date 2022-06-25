@@ -90,24 +90,25 @@ class AppFixtures extends Fixture
                     ->setCity($faker->city)
                     //On associe la commande à un utilisateur aléatoirement.
                     ->setUser($faker->randomElement($users))
-                    ->setTotal(mt_rand(2000, 30000))
                     ->setPurchasedAt($faker->dateTimeBetween('-6 months'));
 
                 $selectedProducts = $faker->randomElements($products, mt_rand(2, 6));
-
+                $totalSelectedProductAmount = 0;
                 foreach ($selectedProducts as $product) {
                     $purchaseItem = new PurchaseItem;
                     $purchaseItem
                         ->setProduct($product)
-                        ->setQuantity(mt_rand(1, 3))
-                        ->setProductName($product->getName())
+                        ->setPurchase($purchase)
                         ->setProductPrice($product->getPrice())
+                        ->setQuantity(mt_rand(3, 5))
+                        ->setProductName($product->getName())
                         ->setTotal(
                             $purchaseItem->getProductPrice() * $purchaseItem->getQuantity()
-                        )
-                        ->setPurchase($purchase);
+                        );
                     $manager->persist($purchaseItem);
+                    $totalSelectedProductAmount += $purchaseItem->getTotal();
                 }
+                $purchase->setTotal(($totalSelectedProductAmount));
 
                 // booléen aléatoire avec 90% de chances de true.
                 if ($faker->boolean(90)) {
