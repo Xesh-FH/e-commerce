@@ -89,6 +89,8 @@ class PurchaseConfirmationController extends AbstractController
         // 8. On enregistre la commande
         $this->em->flush();
 
+        $this->cartService->emptyCart();
+
         $this->addFlash('success', [
             'title' => 'Commande enregistrée !',
             'content' => 'Bravo ! Votre commande a bien été prise en compte.'

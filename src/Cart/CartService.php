@@ -30,7 +30,13 @@ class CartService
         $this->session->set(self::CART_SESSION_KEY, $cart);
     }
 
-
+    /**
+     * This function empties the cart key in session 
+     */
+    public function emptyCart()
+    {
+        $this->saveCart([]);
+    }
 
     /**
      * This function adds a product found by its $id to the 'cart' array in Session.
