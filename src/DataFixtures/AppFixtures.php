@@ -71,13 +71,13 @@ class AppFixtures extends Fixture
                 $product
                     ->setName($faker->productName)
                     ->setPrice($faker->price(4000, 20000))
-                    ->setSlug(strtolower($this->slugger->slug($product->getName())))
                     ->setCategory($category)
                     ->setShortDescription($faker->paragraph())
                     ->setMainPicture($faker->imageUrl(400, 400, true));
 
                 $products[] = $product;
                 $manager->persist($product);
+                $manager->flush();
             }
 
             for ($p = 0; $p < mt_rand(20, 40); $p++) {
