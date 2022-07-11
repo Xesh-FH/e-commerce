@@ -40,7 +40,7 @@ class ProductController extends AbstractController
     /**
      * @Route("/{category_slug}/{slug}", name="product_show", priority=-1)
      */
-    public function show(string $slug, ProductRepository $productRepository, SessionInterface $session)
+    public function show(string $slug, $prenom, ProductRepository $productRepository, SessionInterface $session)
     {
         $product = $productRepository->findOneBy([
             "slug" => $slug,
