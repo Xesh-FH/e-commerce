@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Cart\CartService;
 use App\Entity\Product;
+use App\Event\ProductViewEvent;
 use App\Form\ProductType;
 use App\Repository\ProductRepository;
 use App\Repository\CategoryRepository;
@@ -13,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -40,16 +42,17 @@ class ProductController extends AbstractController
     /**
      * @Route("/{category_slug}/{slug}", name="product_show", priority=-1)
      */
-    public function show(string $slug, $prenom, ProductRepository $productRepository, SessionInterface $session)
+    public function show(string $slug, $prenom, ProductRepository $productRepository, EventDispatcherInterface $dispatcher)
     {
         $product = $productRepository->findOneBy([
             "slug" => $slug,
         ]);
 
-        dump($session->get(CartService::CART_SESSION_KEY));
         if (!$product) {
             throw $this->createNotFoundException("Le produit $slug n'existe pas");
         }
+
+        $dispatcher->dispatch(new ProductViewEvent($product, $this->getUser()), 'product.view');
 
         return $this->render("product/show.html.twig", [
             "product" => $product,
