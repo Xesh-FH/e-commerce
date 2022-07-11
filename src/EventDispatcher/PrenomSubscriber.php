@@ -19,16 +19,16 @@ class PrenomSubscriber implements EventSubscriberInterface
     public function addPrenomToAttributes(RequestEvent $requestEvent)
     {
         $requestEvent->getRequest()->attributes->set('prenom', 'Emmanuel');
-        dump($requestEvent->getRequest()->attributes);
+        //dump($requestEvent->getRequest()->attributes);
     }
 
     public function test1()
     {
-        dump("test1");
+        //dump("test1");
     }
 
     public function test2()
     {
-        dump("test2");
+        //dump("test2");
     }
 }
