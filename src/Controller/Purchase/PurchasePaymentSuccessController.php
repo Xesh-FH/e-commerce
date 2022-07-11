@@ -4,11 +4,13 @@ namespace App\Controller\Purchase;
 
 use App\Entity\Purchase;
 use App\Cart\CartService;
+use App\Envent\PurchaseSuccessEvent;
 use App\Repository\PurchaseRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class PurchasePaymentSuccessController extends AbstractController
 {
@@ -16,8 +18,13 @@ class PurchasePaymentSuccessController extends AbstractController
      * @Route("/purchase/validation/{id}", name="purchase_payment_success")
      * IsGranted("ROLE_USER")
      */
-    public function paymentSuccess(int $id, PurchaseRepository $purchaseRepository, EntityManagerInterface $em, CartService $cartService)
-    {
+    public function paymentSuccess(
+        int $id,
+        PurchaseRepository $purchaseRepository,
+        EntityManagerInterface $em,
+        CartService $cartService,
+        EventDispatcherInterface $dispatcher
+    ) {
         $purchase = $purchaseRepository->find($id);
 
         if (!$purchase) {
@@ -45,6 +52,9 @@ class PurchasePaymentSuccessController extends AbstractController
         $em->flush();
 
         $cartService->emptyCart();
+
+        $purchaseEvent = new PurchaseSuccessEvent($purchase);
+        $dispatcher->dispatch($purchaseEvent, 'purchase.success');
 
         $this->addFlash('success', [
             'title' => "Paiment effectué.",
