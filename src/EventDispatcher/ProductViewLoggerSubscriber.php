@@ -35,7 +35,7 @@ class ProductViewLoggerSubscriber implements EventSubscriberInterface
         $email
             ->from(new Address("contact@symshop.com", "Infos de la boutique"))
             ->to("admin@symshop.com")
-            ->text("Un visiteur consulte actuellement la page du produit n° {$productViewEvent->getProduct()->getId()}")
+            ->html("<h1>Consultation du produit {$productViewEvent->getProduct()->getName()} ({$productViewEvent->getProduct()->getId()})</h1>")
             ->subject("Visite du produit {$productViewEvent->getProduct()->getId()}");
 
         $this->mailer->send($email);
