@@ -27,6 +27,7 @@ class PurchasePersister
         $purchase
             ->setUser($this->security->getUser())
             ->setTotal($this->cartService->getCartTotal());
+
         $this->em->persist($purchase);
 
         foreach ($this->cartService->getDetailedCartItems() as $cartItem) {
@@ -36,10 +37,10 @@ class PurchasePersister
                 ->setProduct($cartItem->product)
                 ->setProductName($cartItem->product->getName())
                 ->setQuantity($cartItem->qty)
-                ->setProductPrice($cartItem->product->getPrice());
+                ->setProductPrice($cartItem->product->getPrice())
+                ->setTotal($cartItem->getTotal());
             $this->em->persist($purchaseItem);
         }
-
         $this->em->flush();
     }
 }
