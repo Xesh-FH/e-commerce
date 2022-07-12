@@ -9,9 +9,9 @@ use Symfony\Contracts\EventDispatcher\Event;
 class ProductViewEvent extends Event
 {
     protected Product $product;
-    protected User $user;
+    protected ?User $user;
 
-    public function __construct(Product $product, User $user)
+    public function __construct(Product $product, ?User $user)
     {
         $this->product = $product;
         $this->user = $user;
@@ -22,7 +22,7 @@ class ProductViewEvent extends Event
         return $this->product;
     }
 
-    public function getUser(): User
+    public function getUser(): ?User
     {
         return $this->user;
     }
