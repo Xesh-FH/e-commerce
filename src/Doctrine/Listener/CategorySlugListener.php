@@ -2,21 +2,22 @@
 
 namespace App\Doctrine\Listener;
 
-use App\Entity\Product;
-use App\Repository\ProductRepository;
+use App\Entity\Category;
+use App\Repository\CategoryRepository;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
-class ProductSlugListener
+class CategorySlugListener
 {
     protected SluggerInterface $slugger;
-    protected ProductRepository $productRepository;
+    protected CategoryRepository $categoryRepository;
 
-    public function __construct(SluggerInterface $slugger, ProductRepository $productRepository)
+    public function __construct(SluggerInterface $sluggerInterface, CategoryRepository $categoryRepository)
     {
-        $this->slugger = $slugger;
-        $this->productRepository = $productRepository;
+        $this->slugger = $sluggerInterface;
+        $this->categoryRepository = $categoryRepository;
     }
-    public function prePersist(Product $entity)
+
+    public function prePersist(Category $entity)
     {
         if (empty($entity->getSlug())) {
             $entity->setSlug(strtolower($this->slugger->slug($entity->getName())));
@@ -28,8 +29,8 @@ class ProductSlugListener
         }
     }
 
-    private function checkSlugInDataBase(Product $product)
+    private function checkSlugInDataBase(Category $category)
     {
-        return count($this->productRepository->findBy(['slug' => $product->getSlug()]));
+        return count($this->categoryRepository->findBy(['slug' => $category->getSlug()]));
     }
 }
