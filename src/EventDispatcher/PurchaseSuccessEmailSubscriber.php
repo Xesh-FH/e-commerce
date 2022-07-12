@@ -2,7 +2,7 @@
 
 namespace App\EventDispatcher;
 
-use App\Envent\PurchaseSuccessEvent;
+use App\Event\PurchaseSuccessEvent;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 

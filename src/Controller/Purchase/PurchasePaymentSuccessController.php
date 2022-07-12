@@ -4,7 +4,7 @@ namespace App\Controller\Purchase;
 
 use App\Entity\Purchase;
 use App\Cart\CartService;
-use App\Envent\PurchaseSuccessEvent;
+use App\Event\PurchaseSuccessEvent;
 use App\Repository\PurchaseRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
