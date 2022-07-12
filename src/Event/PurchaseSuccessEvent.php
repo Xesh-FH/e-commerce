@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Envent;
+namespace App\Event;
 
 use App\Entity\Purchase;
 use Symfony\Contracts\EventDispatcher\Event;
