@@ -2,7 +2,7 @@
 	<img src="{{ p.mainPicture }}" alt="Lorem Ipsum">
 	<div class="card-body">
 		<h4 class="card-title">{{ p.name }}
-			({{p.price/100}}€)</h4>
+			({{p.price | amount }})</h4>
 		<span class="badge bg-primary">{{ p.category.name }}</span>
 		<p class="card-text">{{ p.shortDescription }}</p>
 		<a href="{{ path('product_show', {'category_slug': p.category.slug, 'slug': p.slug}) }}" class="btn btn-primary btn-sm">
