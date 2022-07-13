@@ -31,17 +31,17 @@ class ProductViewLoggerSubscriber implements EventSubscriberInterface
 
     public function logProductView(ProductViewEvent $productViewEvent)
     {
-        $email = new TemplatedEmail();
-        $email
-            ->from(new Address("contact@symshop.com", "Infos de la boutique"))
-            ->to("admin@symshop.com")
-            ->htmlTemplate('emails/product_view.html.twig')
-            ->context([
-                'product' => $productViewEvent->getProduct()
-            ])
-            ->subject("Visite du produit {$productViewEvent->getProduct()->getId()}");
+        // $email = new TemplatedEmail();
+        // $email
+        //     ->from(new Address("contact@symshop.com", "Infos de la boutique"))
+        //     ->to("admin@symshop.com")
+        //     ->htmlTemplate('emails/product_view.html.twig')
+        //     ->context([
+        //         'product' => $productViewEvent->getProduct()
+        //     ])
+        //     ->subject("Visite du produit {$productViewEvent->getProduct()->getId()}");
 
-        $this->mailer->send($email);
+        // $this->mailer->send($email);
 
 
         $this->logger->info(
