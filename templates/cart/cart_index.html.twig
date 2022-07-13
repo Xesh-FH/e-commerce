@@ -22,7 +22,7 @@
 				{% for item in items %}
 					<tr>
 						<td>{{ item.product.name }}</td>
-						<td>{{ item.product.price | amount }}</td>
+						<td>{{ item.product.price | amount('$', '.', ',') }}</td>
 						<td class="d-flex">
 							<a href="{{ path("cart_decrement_item", {"id": item.product.id}) }}" class="btn btn-sm btn-warning">
 								<i class="fas fa-minus"></i>

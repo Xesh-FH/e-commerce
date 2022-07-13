@@ -14,11 +14,11 @@ class AmountExtension extends AbstractExtension
         ];
     }
 
-    public function amount(int $value)
+    public function amount(int $value, string $symbol = '€', string $decSep = ',', $thousandSep = ' ')
     {
         $finalValue = $value / 100;
-        $finalValue = number_format($finalValue, 2, ',', ' ');
+        $finalValue = number_format($finalValue, 2, $decSep, $thousandSep);
 
-        return $finalValue . " €";
+        return $finalValue . " " . $symbol;
     }
 }
